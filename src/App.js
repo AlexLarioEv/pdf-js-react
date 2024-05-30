@@ -1,19 +1,35 @@
-import {PDFViewer} from './PDFViewer'
-import './App.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import {PDFViewer} from './PDFViewer';
 
-function App() {
-  const [file, setFile] = useState(null)
+const App = () => {
+  const [url, setUrl] = useState('');
+  const [file, setFile] = useState('/pdf/pdf_1.pdf');
+
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   }
 
+  const handleLoadUrl = () => {
+    setFile(url);
+  };
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+
   return (
-    <div className="App">
-      <input type='file' accept="application/pdf" onChange={handleFileChange}/>
-      {file&&<PDFViewer file={file}/>}
+    <div>
+      <h1>Просмотр PDF файла</h1>
+      <div>
+      < input type='file' accept="application/pdf" onChange={handleFileChange}/>
+        <input type="text" placeholder="Enter PDF URL" value={url} onChange={handleUrlChange} />
+        <button onClick={handleLoadUrl}>Load PDF from URL</button>
+      </div>
+      {file && <PDFViewer file={file} />}
     </div>
   );
-}
+};
 
 export default App;
