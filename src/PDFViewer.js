@@ -1,25 +1,24 @@
-import {useEffect, useState} from 'react';
-import { Worker, Viewer } from '@react-pdf-viewer/core';
-import '@react-pdf-viewer/core/lib/styles/index.css';
+import React, { useState } from 'react';
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 export const PDFViewer = ({ file }) => {
-  const [pdfFile, setPdfFile] = useState(null);
+  const [numPages, setNumPages] = useState(null);
 
-  console.log(pdfFile)
-  useEffect(() => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPdfFile(reader.result);
-    };
-    reader.readAsDataURL(file);
-  }, [file]);
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
 
   return (
     <div>
-        {/*/pdfjs/pdf.worker.min.js было https://unpkg.com/pdfjs-dist@2.10.377/build/pdf.worker.min.js  */}
-      <Worker workerUrl={`/pdfjs/pdf.worker.min.js`}>  
-        {pdfFile && <Viewer fileUrl={pdfFile} />}
-      </Worker>
+      <Document
+        file={file}
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
+        {Array.from(new Array(numPages), (el, index) => (
+          <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+        ))}
+      </Document>
     </div>
   );
 };
